@@ -18,6 +18,7 @@ var userSchema = new mongoose.Schema({
 	lastname     : String,
 	age          : Number
 });
-  
-// userSchema save to User model
+
+// export module to outside
+// export mongoose model with name: User and schema userSchema.
 module.exports = mongoose.model('User', userSchema);

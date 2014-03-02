@@ -3,7 +3,7 @@
  * An Express server exposes the RESTful API
  * 
  **************************************************************/ 
-// import global packages: express and http module
+// import core modules: express and http module
 var express = require('express'), http = require('http');
 
 // import local module
