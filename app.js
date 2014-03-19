@@ -2,6 +2,11 @@
  * 
  * An Express server exposes the RESTful API
  * 
+ * To fix the cross domain issue,
+ * we need an Access-Control-Allow-Origin header in response. 
+ * Furthermore, we need created an OPTIONS handler 
+ * to answer the options method. 
+ * 
  **************************************************************/ 
 // import core modules: express and http module
 var express = require('express'), http = require('http');
@@ -15,17 +20,21 @@ var app = express();
 // set port
 app.set('port', process.env.PORT || 3000);
 
+//
 // use middleware bodyParser.
 // middleware is a special function.
 // whenever a request come in, it goes to middleware.
 // middleware receives the request, and manipulate the 
 // request and response objects
 // and pass to next function.
+//
 app.use(express.bodyParser());
  
+//
 // Returns an array of user objects
 // no need to pass the next parameter
 // because it will be the end point
+//
 var listUsers = function (req, res) {
 	
 	User.find({}, function(error, dbUsers){
@@ -41,9 +50,11 @@ var listUsers = function (req, res) {
     
 };
 
+//
 // Returns a single user object
-//no need to pass the next parameter
-//because it will be the end point
+// no need to pass the next parameter
+// because it will be the end point
+//
 var userDetails = function (req, res) {
 	// query by id
 	User.findById(req.params.id, function(error, user){
@@ -57,9 +68,11 @@ var userDetails = function (req, res) {
 	} );
 };
 
+//
 // Deletes the given user from the server
-//no need to pass the next parameter
-//because it will be the end point
+// no need to pass the next parameter
+// because it will be the end point
+//
 var deleteUser = function (req, res) {
 	//remove by id
 	User.findByIdAndRemove( req.params.id, function(error, user){
@@ -73,9 +86,11 @@ var deleteUser = function (req, res) {
 	} );
 };
 
+// 
 // Creates a user based off the payload and returns the new user object 
-//no need to pass the next parameter
-//because it will be the end point
+// no need to pass the next parameter
+// because it will be the end point
+//
 var createUser = function (req, res) {
 
 	var user = new User();
@@ -96,20 +111,18 @@ var createUser = function (req, res) {
 
 };
 
+// 
 // Updates the given user with the given payload and returns the newly updated user object
-//no need to pass the next parameter
-//because it will be the end point
+// no need to pass the next parameter
+// because it will be the end point
+//
 var updateUser = function (req, res) {
-
 	var covUser = {
-
 		"firstname" : req.body.firstname,
 		"lastname" : req.body.lastname,
-		"age" : req.body.age
-			
+		"age" : req.body.age			
 	}
-	
-	
+
 	console.log("user for update: " + covUser);
 	console.log("id for update: " +req.params.id);
 	
@@ -126,10 +139,13 @@ var updateUser = function (req, res) {
 
 };
 
+// 
 // fill in common headers
 // need pass the next parameter
 // because it is not the end point
+//
 app.all('*', function(req, res, next){
+	  // allow requests from any domains
 	  res.header("Access-Control-Allow-Origin", "*");
 	  res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	  res.header("Content-Type", "application/json");
@@ -137,11 +153,13 @@ app.all('*', function(req, res, next){
 	  next();
 });
 
+//
 // correct response options
-//no need to pass the next parameter
-//because it will be the end point
+// no need to pass the next parameter
+// because it will be the end point
+//
 app.options('*', function(req, res) {
-    console.log('!OPTIONS');
+    console.log('handle OPTIONS');
     var headers = {};
     headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, DELETE, OPTIONS";
     headers["Access-Control-Allow-Credentials"] = false;
